@@ -77,14 +77,20 @@ function ChatPage() {
   ];
 
   return (
-    <Container className="center-container" maxWidth="xl">
-      <Box>
-        <Paper className="paper">
+    <Container className="center-container container" maxWidth="lg">
+      <Box className="flex">
+        <Typography variant="h3" gutterBottom>
+          Document Chat
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          Will be answering based on the file: somefile.pdf
+        </Typography>
+        <Paper className="chat-interface">
           {chatData.reverse().map((message) => (
             <div key={message.id} style={{ marginBottom: 10 }}>
               {message.type === "prompt" ? (
                 <Typography variant="body1" style={{ fontWeight: "bold" }}>
-                  User: {message.value}
+                  You: {message.value}
                 </Typography>
               ) : (
                 <Typography
@@ -97,14 +103,13 @@ function ChatPage() {
             </div>
           ))}
         </Paper>
-        <Box>
+        <Box className="flex prompt-container">
           <TextField
             id="outlined-multiline-flexible"
             label="Question"
             fullWidth
             multiline
             maxRows={4}
-          />
           />
           <Button variant="contained" endIcon={<SendIcon />}>
             Send
