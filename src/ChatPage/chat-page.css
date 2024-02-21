@@ -1,0 +1,10 @@
+.paper {
+    padding: 20px;
+    margin: 20px 0;
+    height: 70vh;
+    overflow-y: scroll;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: start;
+}
