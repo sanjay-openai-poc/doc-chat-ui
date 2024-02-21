@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import "./chat-page.css";
 import SendIcon from "@mui/icons-material/Send";
 import {
-  Paper,
   Typography,
   TextField,
   Box,
   Button,
   Container,
+  CircularProgress,
 } from "@mui/material";
+import ChatInterface from "./ChatInterface";
 
 function ChatPage() {
+  const [prompt, setPrompt] = useState("");
+  const [loading, setLoading] = useState(true);
   const chatData = [
     { id: 1, type: "prompt", value: "What is blue moon?" },
     {
@@ -72,9 +75,13 @@ function ChatPage() {
       id: 18,
       type: "bot",
       value:
-        "Spiders don't sleep in the same way that mammals do, but they do have periods of rest where they become less active. They also exhibit daily rhythms of activity and inactivity.",
+        "Spiders don't sleep in the same way that mammals do, but they do have periods of rest where they become less active. They also exhibit daily rhythms of activity and inactivity. Spiders don't sleep in the same way that mammals do, but they do have periods of rest where they become less active. They also exhibit daily rhythms of activity and inactivity.",
     },
   ];
+
+  const sendPrompt = () => {
+    console.log("THe prompt: ", prompt);
+  };
 
   return (
     <Container className="center-container container" maxWidth="lg">
@@ -85,24 +92,7 @@ function ChatPage() {
         <Typography variant="subtitle1" gutterBottom>
           Will be answering based on the file: somefile.pdf
         </Typography>
-        <Paper className="chat-interface">
-          {chatData.reverse().map((message) => (
-            <div key={message.id} style={{ marginBottom: 10 }}>
-              {message.type === "prompt" ? (
-                <Typography variant="body1" style={{ fontWeight: "bold" }}>
-                  You: {message.value}
-                </Typography>
-              ) : (
-                <Typography
-                  variant="body1"
-                  style={{ fontStyle: "italic", textAlign: "start" }}
-                >
-                  Bot: {message.value}
-                </Typography>
-              )}
-            </div>
-          ))}
-        </Paper>
+        <ChatInterface chatData={chatData} />
         <Box className="flex prompt-container">
           <TextField
             id="outlined-multiline-flexible"
@@ -110,10 +100,20 @@ function ChatPage() {
             fullWidth
             multiline
             maxRows={4}
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
           />
-          <Button variant="contained" endIcon={<SendIcon />}>
-            Send
-          </Button>
+          {loading ? (
+            <CircularProgress className="progress-ind" />
+          ) : (
+            <Button
+              onClick={sendPrompt}
+              variant="contained"
+              endIcon={<SendIcon />}
+            >
+              Submit
+            </Button>
+          )}
         </Box>
       </Box>
     </Container>
