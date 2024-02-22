@@ -15,7 +15,7 @@ import { submitPrompt } from "../api";
 function ChatPage() {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
-  const [chats, setChat] = useState([]);
+  const [chats] = useState([]);
 
   const sendPrompt = () => {
     const validatedPrompt = prompt.trim();
@@ -31,6 +31,7 @@ function ChatPage() {
         })
         .catch((e) => console.log("Error :", e))
         .finally(() => {
+          setPrompt("");
           setLoading(false);
         });
     }
@@ -43,7 +44,7 @@ function ChatPage() {
           Document Chat
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          Will be answering based on the file: 
+          Will be answering based on the file: {" "}
           {localStorage.getItem("filename")}
         </Typography>
         <ChatInterface chatData={chats} />
@@ -55,6 +56,11 @@ function ChatPage() {
             multiline
             maxRows={4}
             value={prompt}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                sendPrompt();
+              }
+            }}
             onChange={(e) => setPrompt(e.target.value)}
           />
           {loading ? (
