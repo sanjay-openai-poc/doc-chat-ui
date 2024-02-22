@@ -5,8 +5,11 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import "./FormPage.css";
 import { uploadDocument } from "./api";
+import { CircularProgress } from "@mui/material";
 
 function FileUploadPage(props) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -14,18 +17,22 @@ function FileUploadPage(props) {
   };
 
   const handleUpload = () => {
-    console.log("Uploading file:", selectedFile);
     const formData = new FormData();
     formData.append("file", selectedFile);
+    setLoading(true);
+    setError("");
     uploadDocument("set/context/file", formData)
       .then((response) => {
-        console.log("We got the response:", response);
         localStorage.setItem("contextId", response.data.context_id);
+        localStorage.setItem("filename", selectedFile.name);
         props.refresh();
       })
       .catch((error) => {
-        // TODO: Handle error
         console.log("Error:", error);
+        setError(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -33,10 +40,10 @@ function FileUploadPage(props) {
     <Container className="center-container">
       <Paper className="form-container">
         <Typography variant="h4" align="center" gutterBottom>
-          File Upload
+          Upload Document
         </Typography>
         <input
-          accept=".pdf,.doc,.docx,.xls,.xlsx"
+          accept=".pdf,.doc,.docx"
           id="file-upload"
           type="file"
           onChange={handleFileChange}
@@ -53,15 +60,20 @@ function FileUploadPage(props) {
           </Typography>
         )}
         <div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpload}
-            disabled={!selectedFile}
-          >
-            Upload
-          </Button>
+          {loading ? (
+            <CircularProgress className="progress-ind" />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpload}
+              disabled={!selectedFile}
+            >
+              Upload
+            </Button>
+          )}
         </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </Paper>
     </Container>
   );

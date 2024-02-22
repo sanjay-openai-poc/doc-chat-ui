@@ -7,6 +7,7 @@ function App() {
   const [context, setContext] = useState(null);
 
   useEffect(() => {
+    console.log("Starting App");
     queryContextIdFromLocalStorage();
   });
 
@@ -18,8 +19,7 @@ function App() {
   };
 
   const getContainer = () => {
-    // if (context) {
-    if (true) {
+    if (context) {
       return <ChatPage />;
     } else {
       return <FormUploadPage refresh={queryContextIdFromLocalStorage} />;
